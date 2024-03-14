@@ -15,6 +15,9 @@ def Create_user(req: func.HttpRequest) -> func.HttpResponse:
     else:
         username = req_body.get('username')
         password = req_body.get('password')
+        email = req_body.get('email')
+        fulname = req_body.get('fulname')
+        fulname = req_body.get('fulname')
 
     if username and password:
         # Django logic
