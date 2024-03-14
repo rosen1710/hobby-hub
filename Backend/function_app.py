@@ -16,10 +16,14 @@ def Create_user(req: func.HttpRequest) -> func.HttpResponse:
         username = req_body.get('username')
         password = req_body.get('password')
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    if username and password:
+        # Django logic
+        return func.HttpResponse(
+            "User added successfully.",
+            status_code=200
+        )
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
+             "Not valid data provided!",
+             status_code=400
         )
