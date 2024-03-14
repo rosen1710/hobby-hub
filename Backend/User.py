@@ -6,16 +6,16 @@ class User(models.Model):
     email = models.EmailField(unique=True, null=False)
     password_hash = models.TextField()
     fullname = models.TextField()
-    birthdate = models.DateField()
+    age = models.PositiveIntegerField()
     description = models.TextField()
     is_admin = models.BooleanField()
     created_at = models.DateTimeField(defiault=datetime.now())
     
-    def  __init__(self, email, password, fullname, birthdate, description):
+    def  __init__(self, email, password, fullname, age, description):
         self.email = email
         self.password_hash = bcrypt.hashpw(password, bcrypt.gensalt())
         self.fullname = fullname
-        self.birthdate = birthdate
+        self.age = age
         self.description = description
         self.is_admin = False
 
