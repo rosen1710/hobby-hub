@@ -23,7 +23,7 @@ class User(models.Model):
         return self.fullname
 
     def is_valid_email (self, email):
-        regex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+        regex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
 
         if not regex.match(regex, email):
             raise ValueError("It's not an email address.")
