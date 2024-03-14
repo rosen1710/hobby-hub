@@ -1,11 +1,96 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>HobbHUB</title>
+    <style>
+        section {
+            padding:20px 0;
+        }
+        body{
+            background:#FFDFA8;
+            color:#22333B;
+        }
+    </style>
 </head>
 <body>
-    <h1>HobbHUB</h1>
-    <p>Test ...</p>
+    
+
+
+
+    <!-- navbar -->
+  <nav class="navbar navbar-expand-md navbar-light pt-2 pb-2">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#intro">
+        <div class="col-md-4 text-center d-md-block">
+            <img src="/assets/hobbHUB_logo.png" class="px-2" alt="logo" height="50px">
+        </div>
+      </a>
+      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button>
+
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                  <div class="offcanvas-header">
+                    <h5 id="offcanvasRightLabel">Offcanvas right</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+
+                  </div>
+                </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#1">About us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#2">How HobbHUB works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#3">Get in Touch</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-md-inline">
+            <a class="btn btn-secondary" href="#login">Sign in</a>
+          </li>
+          <li class="nav-item ms-2 d-none d-md-inline">
+            <a class="btn btn-secondary" href="#register">Register</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+    <section id="top">
+        <div class="row g-1 justify-content-center align-items-center">
+
+          
+
+            <div class="col-md-2 text-md-start">
+                
+
+            </div>
+
+            <div class="col-md-8 text-center text-md-start">
+                <h1>
+                    <div class="display-1 fw-bold mx-2">HobbHUB</div>
+                    <div class="display-5 mx-2">A place for everyone</div>
+                </h1>
+                <p class="lead mx-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam tempora labore illum maxime dicta veritatis!</p>
+            </div>
+            <!-- <div class="col-md-4 text-center d-none d-md-block"><img src="/assets/hobbHUB_logo.png" class="img-fluid px-5" alt="logo"></div> -->
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
