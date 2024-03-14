@@ -11,3 +11,9 @@ class Hobby (models.Model):
 
     def  __str__ (self):
         return self.name
+    
+    def __init__ (self, name, category, author, icon):
+        self.name = name
+        self.category = category
+        self.author = author
+        # self.icon = path

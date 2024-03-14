@@ -11,3 +11,10 @@ class User (models.Model):
 
     def  __str__ (self):
         return self.fullname
+    
+    def  __init__ (self, email, fullname, birthdate, description):
+        self.email = email
+        self.fullname = fullname
+        self.birthdate = birthdate
+        self.description = description
+        self.is_admin = False
