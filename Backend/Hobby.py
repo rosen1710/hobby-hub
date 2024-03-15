@@ -12,11 +12,17 @@ class Hobby(models.Model):
     approved = models.BooleanField()
     
     def __init__(self, name, category, author, icon):
-        self.name = name
-        self.category = category
+        self.name = self.is_valid_name(name)
+        self.category = self.is_valid_name(category)
         self.author = author
         self.icon = icon
         self.approved = False
 
     def  __str__(self):
         return self.name
+    
+    def is_valid_name (self, name):
+        if name == "":
+            raise ValueError ("Not a valid name!")
+        
+        return name
