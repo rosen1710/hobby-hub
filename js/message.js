@@ -3,7 +3,7 @@ function loadMessages(sectionId){
     section.innerHTML="";
     let messageHtml =`<div class="container lg-6 pt-2" id="${sectionId}-message-container">`;
     //load data
-
+    
     fetch('http://localhost:5000/fetch_messages', {
         method: 'POST',
         headers: {
@@ -20,7 +20,7 @@ function loadMessages(sectionId){
         data.response.forEach(row => {
             // rows += `<tr>${headers.map(header => `<td>${row[header]}</td>`).join('')}</tr>`;
             // console.log(row);
-            let fullName="ivan",
+            let fullName="Ivan",
             message = row[1],
             createdAt=row[4].split(".")[0];
             let isMine = false;
@@ -84,7 +84,9 @@ function insertMessage(sectionId){
     let messageInput=document.getElementById(sectionId+"-message");
     let newMessage=messageInput.value;
     messageInput.value="";
-    messageContainer.innerHTML += prepareMessageHtml("You", newMessage, "test", true);
+    let date = new Date().toJSON().split(".")[0];
+    date = date.split("T")[0] + " " + date.split("T")[1];
+    messageContainer.innerHTML += prepareMessageHtml("You", newMessage, date, true);
 
 }
 
