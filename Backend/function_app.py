@@ -5,6 +5,7 @@ import psycopg2
 import bcrypt
 import json
 import re
+from datetime import datetime
 
 def create_connection():
     conn = psycopg2.connect(
@@ -185,9 +186,18 @@ def get_all_hobbies():
     cur.execute("SELECT * FROM hobby")
     response = cur.fetchall()
 
+    response_formatted = []
+
+    for x in range(len(response)):
+        element = list(response[x])
+        response_formatted.append(element)
+        for y in range(len(element)):
+            if isinstance(element[y], datetime):
+                response_formatted[x][y] = str(element[y])
+
     conn.close()
 
-    return response
+    return response_formatted
 
 def get_all_channels(hobby_id):
     conn = create_connection()
@@ -196,9 +206,18 @@ def get_all_channels(hobby_id):
     cur.execute("SELECT * FROM channel WHERE hobby_id = %s", (hobby_id,))
     response = cur.fetchall()
 
+    response_formatted = []
+
+    for x in range(len(response)):
+        element = list(response[x])
+        response_formatted.append(element)
+        for y in range(len(element)):
+            if isinstance(element[y], datetime):
+                response_formatted[x][y] = str(element[y])
+
     conn.close()
 
-    return response
+    return response_formatted
 
 def get_all_messages(channel_id):
     conn = create_connection()
@@ -207,9 +226,18 @@ def get_all_messages(channel_id):
     cur.execute("SELECT * FROM message WHERE channel_id = %s", (channel_id,))
     response = cur.fetchall()
 
+    response_formatted = []
+
+    for x in range(len(response)):
+        element = list(response[x])
+        response_formatted.append(element)
+        for y in range(len(element)):
+            if isinstance(element[y], datetime):
+                response_formatted[x][y] = str(element[y])
+
     conn.close()
 
-    return response
+    return response_formatted
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -399,9 +427,9 @@ def login_user(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="get_all_hobbies")
-def get_all_hobbies(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called get_all_hobbies function')
+@app.route(route="fetch_hobbies")
+def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called fetch_hobbies function')
 
     try:
         response = get_all_hobbies()
@@ -418,9 +446,9 @@ def get_all_hobbies(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="get_all_channels")
-def get_all_channels(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called get_all_channels function')
+@app.route(route="fetch_channels")
+def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called fetch_channels function')
 
     try:
         # create_tables()
@@ -451,9 +479,9 @@ def get_all_channels(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="get_all_messages")
-def get_all_messages(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called get_all_messages function')
+@app.route(route="fetch_messages")
+def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called fetch_messages function')
 
     try:
         # create_tables()
