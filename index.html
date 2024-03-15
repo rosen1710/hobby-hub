@@ -13,6 +13,7 @@
             background:#FFDFA8;
             color:#22333B;
             color:#446576;
+            width: 99%;
         }
         .cyanbg{
             background:#09C0DE;
@@ -35,59 +36,36 @@
                     <h5 id="offcanvasLeftLabel">Hobbies</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                   </div>
+                  <div class="input-group px-2">
+                    <div class="form-outline" data-mdb-input-init>
+                      <input type="search" id="form1" class="form-control"/>
+                      <label class="form-label" for="form1">Search</label>
+                    </div>
+                    <button type="button" class="btn btn-primary">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
                   <div class="offcanvas-body">
-                    <div class="accordion" id="accord1">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header" id="panel-open1">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelOpen1" aria-expanded="true" aria-controls="panelOpen1">
-                              Football
-                            </button>
-                          </h2>
-                          <div id="panelOpen1" class="accordion-collapse collapse show" aria-labelledby="panel-open1">
-                            <div class="accordion-body">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#1">General</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#2">Searching For a Team</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#3">Achievements</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#4">Bonus channel</a>
-                                      </li>
-                                  </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="panel-open2">
-                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelOpen2" aria-expanded="true" aria-controls="panelOpen2">
-                                Soccer
-                              </button>
-                            </h2>
-                            <div id="panelOpen2" class="accordion-collapse collapse show" aria-labelledby="panel-open2">
-                              <div class="accordion-body">
-                                  <ul class="navbar-nav">
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#1">General</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#2">Searching For a Team</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#3">Achievements</a>
-                                      </li>
-                                      <li class="nav-item">
-                                          <a class="nav-link" href="#4">Bonus channel</a>
-                                        </li>
-                                    </ul>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
+                    <div class="dropdown mt-3">
+                      <button class="btn btn-secondary cyanbg dropdown-toggle" type="button" id="drop_btn" data-bs-toggle="dropdown">
+                        Soccer
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="drop_btn">
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Teams</a></li>
+                        <li><a class="dropdown-item" href="#">Achievements</a></li>
+                      </ul>
+                    </div>
+                    <div class="dropdown mt-3">
+                      <button class="btn btn-secondary cyanbg dropdown-toggle" type="button" id="drop_btn" data-bs-toggle="dropdown">
+                        Football
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="drop-btn">
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Teams</a></li>
+                        <li><a class="dropdown-item" href="#">Achievements</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,39 +127,39 @@
                 <div class="container-lg px-5">
                   
                   <div class="text-center">
-                    <h2 class="display-1 pt-5" id="#contact_us">Contact us</h2>
+                    <h2 class="display-1 pt-5" id="contact_us">Contact us</h2>
                   </div>
                   <div class="row justify-content-center my-5">
                     <div class="col-lg-6">
-                      <form>
+                      <form id="contactForm">
                         <label for="name" class="form-label">Name:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
-                            <i class="bi bi-person-fill text-secondary"></i>
+                            <i name="name" class="bi bi-person-fill text-secondary"></i>
                           </span>
-                          <input type="text" id="name" class="form-control" placeholder="e.g. John" />
+                          <input name="name" type="text" id="name" class="form-control" placeholder="e.g. John" />
                         </div>
                         <label for="email" class="form-label">Email address:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
                             <i class="bi bi-envelope-fill text-secondary"></i>
                           </span>
-                          <input type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
+                          <input name="email" type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
                         </div>                        
-                        <label for="email" class="form-label">Topic:</label>
+                        <label for="topic" class="form-label">Topic:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
                             <i class="bi bi-question-circle text-secondary"></i>
                           </span>
-                          <input type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
+                          <input name="topic" type="text" id="topic" class="form-control" placeholder="e.g. john@example.com" />
                         </div>  
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" rows="3"></textarea>
+                            <textarea name="description" class="form-control" id="description" rows="3"></textarea>
                           </div>
                           
                         <div class="mb-4 pt-4 text-center">
-                          <button type="submit" class="btn btn-secondary">Register</button>
+                          <button type="submit" class="btn btn-primary cyanbg">Send feedback</button>
                         </div>
                       </form>
                     </div>
@@ -191,10 +169,7 @@
         </div>
         
     </section>
+    <script src="js/contact.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>
