@@ -247,19 +247,19 @@ def get_all_messages(channel_id):
 # app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 # @app.route(route="create_user")
+@app.route('/create_user', methods=['POST'])
 def create_user():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            email = req_body.get('email')
-            password = req_body.get('password')
-            fullname = req_body.get('fullname')
-            age = req_body.get('age')
-            description = req_body.get('description')
+            email = req_body['email']
+            password = req_body['password']
+            fullname = req_body['fullname']
+            age = req_body['age']
+            description = req_body['description']
 
             emailregex = re.compile(r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
             passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
@@ -277,204 +277,198 @@ def create_user():
             if (age < 14) or (age > 150):
                 raise ValueError("Age is not valid!")
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         add_user(email, password, fullname, age, description)
-        return func.HttpResponse(
-            "User added successfully.",
-            status_code=200
-        )
+        return jsonify({
+            "message": "User added successfully.",
+            "status_code": 200
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="create_hobby")
+@app.route('/create_hobby', methods=['POST'])
 def create_hobby():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            name = req_body.get('name')
+            name = req_body['name']
 
             if name == "":
                 raise ValueError ("Not a valid name!")
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         add_hobby(name)
-        return func.HttpResponse(
-            "Hobby added successfully.",
-            status_code=200
-        )
+        return jsonify({
+            "message": "Hobby added successfully.",
+            "status_code": 200
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="create_channel")
+@app.route('/create_channel', methods=['POST'])
 def create_channel():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            name = req_body.get('name')
-            hobby_id = req_body.get('hobby_id')
+            name = req_body['name']
+            hobby_id = req_body['hobby_id']
 
             if name == "":
                 raise ValueError ("Not a valid name!")
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         add_channel(name, hobby_id)
-        return func.HttpResponse(
-            "Channel added successfully.",
-            status_code=200
-        )
+        return jsonify({
+            "message": "Channel added successfully.",
+            "status_code": 200
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="create_message")
+@app.route('/create_message', methods=['POST'])
 def create_message():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            name = req_body.get('name')
-            user_id = req_body.get('user_id')
-            channel_id = req_body.get('channel_id')
+            name = req_body['name']
+            user_id = req_body['user_id']
+            channel_id = req_body['channel_id']
 
             if name == "":
                 raise ValueError ("Not a valid name!")
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         add_message(name, user_id, channel_id)
-        return func.HttpResponse(
-            "Message added successfully.",
-            status_code=200
-        )
+        return jsonify({
+            "message": "Message added successfully.",
+            "status_code": 200
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="login_user")
+@app.route('/login_user', methods=['POST'])
 def login_user():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            email = req_body.get('email')
-            password = req_body.get('password')
+            email = req_body['email']
+            password = req_body['password']
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         response = login(email, password)
-        return func.HttpResponse(
-            json.dumps({
-                "message": "User logged in successfully.",
-                "response": response
-            }),
-            status_code=202
-        )
+        return jsonify({
+            "message": "User logged in successfully.",
+            "response": response,
+            "status_code": 202
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="fetch_hobbies")
+@app.route('/fetch_hobbies', methods=['POST'])
 def fetch_hobbies():
     try:
         response = get_all_hobbies()
-        return func.HttpResponse(
-            json.dumps({
-                "message": "Hobbies fettched successfully.",
-                "response": response
-            }),
-            status_code=202
-        )
+        return jsonify({
+            "message": "Hobbies fettched successfully.",
+            "response": response,
+            "status_code": 202
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="fetch_channels")
+@app.route('/fetch_channels', methods=['POST'])
 def fetch_channels():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
     else:
         try:
-            hobby_id = req_body.get('hobby_id')
+            hobby_id = req_body['hobby_id']
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         response = get_all_channels(hobby_id)
-        return func.HttpResponse(
-            json.dumps({
-                "message": "Channels fettched successfully.",
-                "response": response
-            }),
-            status_code=202
-        )
+        return jsonify({
+            "message": "Channels fettched successfully.",
+            "response": response,
+            "status_code": 202
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
 
 # @app.route(route="fetch_messages")
 @app.route('/fetch_messages', methods=['POST'])
 def fetch_messages():
     try:
-        # create_tables()
         req_body = req.get_json()
     except ValueError:
         pass
@@ -501,4 +495,5 @@ def fetch_messages():
         })
 
 if __name__ == '__main__':
+    create_tables()
     app.run() # Run the Flask app

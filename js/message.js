@@ -22,7 +22,7 @@ function loadMessages(sectionId){
             // console.log(row);
             let fullName="ivan",
             message = row[1],
-            createdAt=row[4];
+            createdAt=row[4].split(".")[0];
             let isMine = false;
             messageHtml="";
             messageHtml += prepareMessageHtml(fullName, message, createdAt, isMine);
