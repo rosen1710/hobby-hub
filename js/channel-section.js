@@ -29,16 +29,16 @@ function prepareMessageHtml(fullName, message, createdAt, isMine) {
 }
 
 function addMessageForm(sectionId){
-    return `<form name="${sectionId}-form" action="" id="msgSend">
+    return `<div name="${sectionId}-form">
         <div class="row pb-2 pt-5">
             <div class="col-10">
-                <input name="message" type="text" id="message-input" class="container-fluid form-control">
+                <input name="${sectionId}-message" type="text" id="${sectionId}-message" class="container-fluid form-control">
             </div>
             <div class="col-1">
-                <button type="submit" id="send-btn" class="col container-fluid form-control">Send</button>
+                <button type="button" id="send-btn" class="col container-fluid form-control" onclick="insertMessage('${sectionId}')">Send</button>
             </div>
         </div>
-    </form>`;
+    </div>`;
 }
 
 

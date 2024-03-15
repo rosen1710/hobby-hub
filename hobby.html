@@ -82,61 +82,25 @@
         <div class="container lg-6 align-items-center text-center">
             <nav>
                 <div class="nav nav-tabs bgdefault" id="nav-tab" role="tablist">
-                  <button class="col-2 nav-link active fs-3" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="true" onclick="loadMessages('nav-general')">General</button>
-                  <button class="nav-link" id="nav-teams-tab" data-bs-toggle="tab" data-bs-target="#nav-teams" type="button" role="tab" aria-controls="nav-teams" aria-selected="false" onselect="loadMessages('nav-teams')">Teams</button>
-                  <button class="nav-link" id="nav-achievements-tab" data-bs-toggle="tab" data-bs-target="#nav-achievements" type="button" role="tab" aria-controls="nav-achievements" aria-selected="false" onselect="loadMessages('nav-achievements')">Achievemnts</button>
+                  <button class="col-2 nav-link active fs-3" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="nav-general" aria-selected="true" onclick="loadMessages('general')">General</button>
+                  <button class="col-2 nav-link fs-3" id="nav-teams-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button" role="tab" aria-controls="nav-teams" aria-selected="false" onclick="loadMessages('teams')">Teams</button>
+                  <button class="col-2 nav-link fs-3" id="nav-achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab" aria-controls="nav-achievements" aria-selected="false" onclick="loadMessages('achievements')">Achievemnts</button>
                 </div>
               </nav>
               <div class="tab-content bg-white text-muted text-wrap form-control" id="nav-tabContent">
                 <!-- General tab -->
-                <div class="tab-pane fade show active" id="nav-general" role="tabpanel" aria-labelledby="nav-general-tab">
-
-                    <!-- <div class="container lg-6 pt-2" id="generalMessageContainer">
-                        <div name="msgOther" class="fs-3 text-start">
-                            <span class="text-decoration-underline" name="msgAuthor">Bob <br></span>
-                            <span class="fs-2" name="msg">Example message 1<br></span>
-                            <span class="fs-6 font-italic" name="msgDate">4:01PM<br></span>
-                        </div>
-                        <div name="msgMe" class="fs-3 text-end">
-                            <span class="text-decoration-underline" name="msgAuthor">You <br></span>
-                            <span class="fs-2" name="msg">Example message 2<br></span>
-                            <span class="fs-6 font-italic" name="msgDate">4:02PM<br></span>
-                        </div>
-                        <div class="fs-3 text-start">
-                            <span class="text-decoration-underline">Moje <br></span>
-                            <span class="fs-2">Example message 3<br></span>
-                            <span class="fs-6 font-italic">4:02PM<br></span>
-                        </div>
-                        
-                        <form id="msgSend">
-                            <div class="row pb-2 pt-5">
-                                <div class="col-10">
-                                    <input name="message" type="text" id="message-input" class="container-fluid form-control">
-                                </div>
-                                <div class="col-1">
-                                    <button type="submit" id="send-btn" class="col container-fluid form-control">Send</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div> -->
-                </div>
+                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="nav-general-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div>
                 <!-- Teams tab -->
-                <div class="tab-pane fade" id="nav-teams" role="tabpanel" aria-labelledby="nav-teams-tab">
-                    <div class="container lg-6" id="container-teams">
-                        a
-                    </div>
-                </div>
+                <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="nav-teams-tab"></div>
                 <!-- Achievements tab -->
-                <div class="tab-pane fade" id="nav-achievements" role="tabpanel" aria-labelledby="nav-achievements-tab">
-                    <div class="container lg-6" id="container-achievements">
-                        a
-                    </div>
-                </div>
+                <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="nav-achievements-tab"></div>
               </div>
         </div>
     </section>
     <script>
         document.getElementById('nav-general-tab').click();
+        var objDiv = document.getElementById("general");
+        objDiv.scrollTop = objDiv.scrollHeight;
     </script>
     <script src="js/message.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

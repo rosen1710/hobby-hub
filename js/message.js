@@ -1,15 +1,10 @@
-let msgSend = document.getElementById('msgSend');
-msgSend.addEventListener('submit', message);
-function message(event){
-    event.preventDefault();
-    let formData = new FormData(event.target);
-    let newMessage=formData.get("message");
-    let formName = event.target.name;
-    let messageContainerId = formName.replace("-form", "-message-container");
-    let container = document.getElementById(messageContainerId);
+function insertMessage(sectionId){
+    let messageContainer=document.getElementById(sectionId+"-message-container");
+    let messageInput=document.getElementById(sectionId+"-message");
+    let newMessage=messageInput.value;
+    messageInput.value="";
+    messageContainer.innerHTML += prepareMessageHtml("test", newMessage, "test", true);
 
-    container.innerHTML += prepareMessageHtml("test", newMessage, "test", true);
-    debugger;
 }
 
 function prepareMessageHtml(fullName, message, createdAt, isMine) {
