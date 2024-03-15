@@ -116,6 +116,52 @@ def add_hobby(name):
     conn.commit()
     conn.close()
 
+def add_channel(name, hobby_id):
+    conn = create_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("INSERT INTO channel (name, hobby_id) VALUES (%s, %s) RETURNING id;",
+            (name, hobby_id))
+    except psycopg2.errors.UniqueViolation:
+        conn.commit()
+        conn.close()
+        raise psycopg2.errors.UniqueViolation("This channel already exist!")
+    except psycopg2.errors.ForeignKeyViolation:
+        conn.commit()
+        conn.close()
+        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exist!")
+    except:
+        conn.commit()
+        conn.close()
+        raise Exception("Unhandled exception occurred!")
+
+    conn.commit()
+    conn.close()
+
+def add_message(name, user_id, channel_id):
+    conn = create_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("INSERT INTO message (text, user_id, channel_id) VALUES (%s, %s, %s) RETURNING id;",
+            (name, user_id, channel_id))
+    except psycopg2.errors.UniqueViolation:
+        conn.commit()
+        conn.close()
+        raise psycopg2.errors.UniqueViolation("This message already exist!")
+    except psycopg2.errors.ForeignKeyViolation:
+        conn.commit()
+        conn.close()
+        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exist!")
+    except:
+        conn.commit()
+        conn.close()
+        raise Exception("Unhandled exception occurred!")
+
+    conn.commit()
+    conn.close()
+
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="create_user")
@@ -135,9 +181,9 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             age = req_body.get('age')
             description = req_body.get('description')
 
-            emailregex = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
+            emailregex = re.compile(r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
             passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
-            fullnameregex = re.compile(r"[A-Za-z]{2,25}||\s[A-Za-z]{2,25}")
+            fullnameregex = re.compile(r"[A-Za-z]{2,25}\s[A-Za-z]{2,25}")
 
             if not re.fullmatch(emailregex, email):
                 raise ValueError("Email is not valid!")
@@ -193,6 +239,75 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
         add_hobby(name)
         return func.HttpResponse(
             "Hobby added successfully.",
+            status_code=200
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="create_channel")
+def create_channel(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called create_channel function')
+
+    try:
+        # create_tables()
+        req_body = req.get_json()
+    except ValueError:
+        pass
+    else:
+        try:
+            name = req_body.get('name')
+            hobby_id = req_body.get('hobby_id')
+
+            if name == "":
+                raise ValueError ("Not a valid name!")
+        except Exception as e:
+            return func.HttpResponse(
+                str(e),
+                status_code=400
+            )
+
+    try:
+        add_channel(name, hobby_id)
+        return func.HttpResponse(
+            "Channel added successfully.",
+            status_code=200
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="create_message")
+def create_message(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called create_message function')
+
+    try:
+        # create_tables()
+        req_body = req.get_json()
+    except ValueError:
+        pass
+    else:
+        try:
+            name = req_body.get('name')
+            user_id = req_body.get('user_id')
+            channel_id = req_body.get('channel_id')
+
+            if name == "":
+                raise ValueError ("Not a valid name!")
+        except Exception as e:
+            return func.HttpResponse(
+                str(e),
+                status_code=400
+            )
+
+    try:
+        add_message(name, user_id, channel_id)
+        return func.HttpResponse(
+            "Message added successfully.",
             status_code=200
         )
     except Exception as e:
