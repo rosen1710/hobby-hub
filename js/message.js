@@ -18,3 +18,4 @@ function prepareMessageHtml(fullName, message, createdAt, isMine) {
         <span class="fs-6 font-italic" name="msgDate">${createdAt} <br></span>
         </div>`;
 }
+
