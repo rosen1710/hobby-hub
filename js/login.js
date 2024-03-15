@@ -6,8 +6,5 @@ function login(event){
     formData.forEach((value, key) => {
         console.log(`${key}: ${value}`)
     });
-
-
-
     debugger;
 }
