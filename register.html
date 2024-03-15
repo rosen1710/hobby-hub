@@ -9,7 +9,8 @@
     <script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>  
     <script src ="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>  
     <link rel ="stylesheet" href ="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
-    <link rel ="stylesheet" href ="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">  
+    <link rel ="stylesheet" href ="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    
     <title>Register</title>
     <style>
         section {
@@ -45,22 +46,32 @@
                           <span class="input-group-text">
                             <i class="bi bi-envelope-fill text-secondary"></i>
                           </span>
-                          <input type="text" id="email" class="form-control" placeholder="e.g. john@example.com" />
+                          <input type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
                         </div>
                         <label for="password" class="form-label">Password:</label>
                         <div class="mb-4 input-group">
                           <span class="input-group-text">
                             <i class="bi bi-pass-fill text-secondary"></i>
                           </span>
-                          <input type="text" id="password" class="form-control" placeholder="*****" />
+                          <input type="password" id="password" class="form-control" placeholder="*****" />
                         </div>
                         <label for="age" class="form-label">Age:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
                             <i class="bi bi-person-check-fill text-secondary"></i>
                           </span>
-                          <input type="text" id="age" class="form-control" placeholder="At least 14" />
+                          <input type="number" id="age" class="form-control" placeholder="At least 14" />
                         </div>
+                        <div id="date-picker-example" class="md-form md-outline input-with-post-icon datepicker" inline="true">
+                            <label for="picker">Date of birth</label>
+                          </div>
+                        <div class='input-group date mb-4' id='picker'>
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar text-secondary"></i>
+                              </span>
+                            <input type='date' class="form-control" />
+                          </div>
+                         </script>
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control" id="description" rows="3"></textarea>
@@ -74,7 +85,7 @@
                   </div>
                 </div>
               </section>
-
+        </div>
     
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
