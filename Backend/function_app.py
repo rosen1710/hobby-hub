@@ -57,7 +57,7 @@ def create_tables():
         create_table = """
             CREATE TABLE IF NOT EXISTS channel (
                 id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE,
+                name TEXT NOT NULL,
                 hobby_id INT NOT NULL REFERENCES hobby(id),
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
