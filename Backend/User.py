@@ -12,12 +12,42 @@ class User(models.Model):
     created_at = models.DateTimeField(defiault=datetime.now())
     
     def  __init__(self, email, password, fullname, age, description):
-        self.email = email
-        self.password_hash = bcrypt.hashpw(password, bcrypt.gensalt())
-        self.fullname = fullname
-        self.age = age
+        self.email = self.is_valid_email(email)
+        self.password_hash = bcrypt.hashpw(self.is_valid_password(password), bcrypt.gensalt())
+        self.fullname = self.is_valid_fullname(fullname)
+        self.age = self.is_valid_age(age)
         self.description = description
         self.is_admin = False
 
     def  __str__(self):
         return self.fullname
+
+    def is_valid_email (self, email):
+        regex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+
+        if not regex.match(regex, email):
+            raise ValueError("It's not an email address.")
+        
+        return email
+    
+    def is_valid_password (self, password):
+        regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+
+        if not regex.match (regex, password):
+            raise ValueError("Password is not valid!")
+        
+        return password
+
+    def is_valid_fullname (self, fullname):
+        regex = "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+
+        if not regex.match (regex, fullname):
+            raise ValueError("Name is not valid!")
+
+        return fullname
+    
+    def is_valid_age (self, age):
+        if (age < 14) or (age > 150):
+            raise ValueError("Age is not valid!")
+
+        return age
