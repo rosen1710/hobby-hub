@@ -10,15 +10,15 @@ function register(event){
     }
        
     let bodyContent = JSON.stringify({
-        "email": formData.get('email'),
-        "password": formData.get('password'),
-        "fullname": formData.get('fullname'),
-        "age": formData.get('age'),
-        "description": formData.get('description')
+        email: formData.get('email'),
+        password: formData.get('password'),
+        fullname: formData.get('fullname'),
+        age: formData.get('age'),
+        description: formData.get('description')
     });
     debugger;
-    fetch("https://cors-anywhere.herokuapp.com/https://hobby-hub.azurewebsites.net/api/create_user", { 
-    // fetch("https://hobby-hub.azurewebsites.net/api/create_user", { 
+    // fetch("https://cors-anywhere.herokuapp.com/https://hobby-hub.azurewebsites.net/api/create_user", { 
+    fetch("https://hobby-hub.azurewebsites.net/api/create_user", { 
         method: "POST",
         body: bodyContent,
         headers: headersList
