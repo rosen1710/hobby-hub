@@ -3,6 +3,7 @@ import logging
 
 import psycopg2
 import bcrypt
+import re
 
 def create_connection():
     conn = psycopg2.connect(
@@ -134,17 +135,17 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             age = req_body.get('age')
             description = req_body.get('description')
 
-            emailregex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
-            passwordregex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
-            fullnameregex = "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+            emailregex = re.compile(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+            passwordregex = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$")
+            fullnameregex = re.compile(r"\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")
 
-            if not emailregex.match(emailregex, email):
+            if not re.fullmatch(emailregex, email):
                 raise ValueError("Email is not valid!")
             
-            if not passwordregex.match(passwordregex, password):
+            if not re.fullmatch(passwordregex, password):
                 raise ValueError("Password is not valid!")
             
-            if not fullnameregex.match(fullnameregex, fullname):
+            if not re.fullmatch(fullnameregex, fullname):
                 raise ValueError("Full name is not valid!")
             
             if (age < 14) or (age > 150):
