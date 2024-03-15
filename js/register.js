@@ -5,7 +5,8 @@ function register(event){
     let formData = new FormData(event.target);
     
     let headersList = {
-        // "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept", 
         "Content-Type": "application/json"
     }
        
@@ -17,10 +18,9 @@ function register(event){
         description: formData.get('description')
     });
     debugger;
-    // fetch("https://cors-anywhere.herokuapp.com/https://hobby-hub.azurewebsites.net/api/create_user", { 
-    fetch("https://hobby-hub.azurewebsites.net/api/create_user", { 
-        method: "POST",
-        body: bodyContent,
+    fetch("https://cors-anywhere.herokuapp.com/https://hobby-hub.azurewebsites.net/api/create_user", { 
+    // fetch("https://hobby-hub.azurewebsites.net/api/create_user", { 
+        method: "get",
         headers: headersList
     }).then(()=> {
         window.location.replace("login.html")
@@ -29,4 +29,3 @@ function register(event){
     });
     debugger;
 }
-
