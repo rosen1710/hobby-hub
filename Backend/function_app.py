@@ -3,6 +3,7 @@ import logging
 
 import psycopg2
 import bcrypt
+import json
 import re
 
 def create_connection():
@@ -15,7 +16,7 @@ def create_connection():
     )
     return conn
 
-# Create tables if they don't exist
+# Create tables if they don't exists
 def create_tables():
     try:
         conn = create_connection()
@@ -84,11 +85,11 @@ def add_user(email, password, fullname, age, description):
 
     try:
         cur.execute("INSERT INTO hhuser (email, password_hash, fullname, age, description) VALUES (%s, %s, %s, %s, %s) RETURNING id;",
-            (email, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()), fullname, age, description))
+            (email, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), fullname, age, description))
     except psycopg2.errors.UniqueViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.UniqueViolation("User with this email already exist!")
+        raise psycopg2.errors.UniqueViolation("User with this email already exists!")
     except:
         conn.commit()
         conn.close()
@@ -107,7 +108,7 @@ def add_hobby(name):
     except psycopg2.errors.UniqueViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.UniqueViolation("This hobby already exist!")
+        raise psycopg2.errors.UniqueViolation("This hobby already exists!")
     except:
         conn.commit()
         conn.close()
@@ -126,11 +127,11 @@ def add_channel(name, hobby_id):
     except psycopg2.errors.UniqueViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.UniqueViolation("This channel already exist!")
+        raise psycopg2.errors.UniqueViolation("This channel already exists!")
     except psycopg2.errors.ForeignKeyViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exist!")
+        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exists!")
     except:
         conn.commit()
         conn.close()
@@ -149,11 +150,11 @@ def add_message(name, user_id, channel_id):
     except psycopg2.errors.UniqueViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.UniqueViolation("This message already exist!")
+        raise psycopg2.errors.UniqueViolation("This message already exists!")
     except psycopg2.errors.ForeignKeyViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exist!")
+        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exists!")
     except:
         conn.commit()
         conn.close()
@@ -161,6 +162,54 @@ def add_message(name, user_id, channel_id):
 
     conn.commit()
     conn.close()
+
+def login(email, password):
+    conn = create_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM hhuser WHERE email = %s", (email,))
+
+    response = cur.fetchone()
+
+    conn.close()
+
+    if not bcrypt.checkpw(password.encode("utf-8"), response[2].encode("utf-8")):
+        raise Exception("Wrong password provided!")
+
+    return response
+
+def get_all_hobbies():
+    conn = create_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM hobby")
+    response = cur.fetchall()
+
+    conn.close()
+
+    return response
+
+def get_all_channels(hobby_id):
+    conn = create_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM channel WHERE hobby_id = %s", (hobby_id,))
+    response = cur.fetchall()
+
+    conn.close()
+
+    return response
+
+def get_all_messages(channel_id):
+    conn = create_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM message WHERE channel_id = %s", (channel_id,))
+    response = cur.fetchall()
+
+    conn.close()
+
+    return response
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -309,6 +358,125 @@ def create_message(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(
             "Message added successfully.",
             status_code=200
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="login_user")
+def login_user(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called login_user function')
+
+    try:
+        # create_tables()
+        req_body = req.get_json()
+    except ValueError:
+        pass
+    else:
+        try:
+            email = req_body.get('email')
+            password = req_body.get('password')
+        except Exception as e:
+            return func.HttpResponse(
+                str(e),
+                status_code=400
+            )
+
+    try:
+        response = login(email, password)
+        return func.HttpResponse(
+            json.dumps({
+                "message": "User logged in successfully.",
+                "response": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="get_all_hobbies")
+def get_all_hobbies(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called get_all_hobbies function')
+
+    try:
+        response = get_all_hobbies()
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Hobbies fettched successfully.",
+                "response": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="get_all_channels")
+def get_all_channels(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called get_all_channels function')
+
+    try:
+        # create_tables()
+        req_body = req.get_json()
+    except ValueError:
+        pass
+    else:
+        try:
+            hobby_id = req_body.get('hobby_id')
+        except Exception as e:
+            return func.HttpResponse(
+                str(e),
+                status_code=400
+            )
+
+    try:
+        response = get_all_channels(hobby_id)
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Channels fettched successfully.",
+                "response": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        return func.HttpResponse(
+            str(e),
+            status_code=400
+        )
+
+@app.route(route="get_all_messages")
+def get_all_messages(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger called get_all_messages function')
+
+    try:
+        # create_tables()
+        req_body = req.get_json()
+    except ValueError:
+        pass
+    else:
+        try:
+            channel_id = req_body.get('channel_id')
+        except Exception as e:
+            return func.HttpResponse(
+                str(e),
+                status_code=400
+            )
+
+    try:
+        response = get_all_messages(channel_id)
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Messages fettched successfully.",
+                "response": response
+            }),
+            status_code=202
         )
     except Exception as e:
         return func.HttpResponse(
