@@ -5,19 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>HobbHUB</title>
-    <style>
-        section {
-            padding:20px 0;
-        }
-        body{
-            background:#FFDFA8;
-            color:#22333B;
-            color:#446576;
-        }
-        .cyanbg{
-            background:#09C0DE;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- navbar -->
@@ -28,81 +16,58 @@
             <img src="/assets/hobbHUB_logo.png" class="px-2" alt="logo" height="50px">
         </div>
       </a>
-      <button class="btn btn-primary cyanbg text-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft">Hobbies list</button>
+      <!-- <button class="btn btn-primary cyanbg text-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft">Hobbies list</button>
 
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
                   <div class="offcanvas-header">
                     <h5 id="offcanvasLeftLabel">Hobbies</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                   </div>
-                  <div class="offcanvas-body">
-                    <div class="accordion" id="accord1">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header" id="panel-open1">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelOpen1" aria-expanded="true" aria-controls="panelOpen1">
-                              Football
-                            </button>
-                          </h2>
-                          <div id="panelOpen1" class="accordion-collapse collapse show" aria-labelledby="panel-open1">
-                            <div class="accordion-body">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#1">General</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#2">Searching For a Team</a>
-                                    </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link" href="#3">Achievements</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#4">Bonus channel</a>
-                                      </li>
-                                  </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="panel-open2">
-                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelOpen2" aria-expanded="true" aria-controls="panelOpen2">
-                                Soccer
-                              </button>
-                            </h2>
-                            <div id="panelOpen2" class="accordion-collapse collapse show" aria-labelledby="panel-open2">
-                              <div class="accordion-body">
-                                  <ul class="navbar-nav">
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#1">General</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#2">Searching For a Team</a>
-                                      </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" href="#3">Achievements</a>
-                                      </li>
-                                      <li class="nav-item">
-                                          <a class="nav-link" href="#4">Bonus channel</a>
-                                        </li>
-                                    </ul>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
+                  <div class="input-group px-2">
+                    <div class="form-outline" data-mdb-input-init>
+                      <input type="search" id="form1" class="form-control"/>
+                      <label class="form-label" for="form1">Search</label>
+                    </div>
+                    <button type="button" class="btn btn-primary">
+                      <i class="fas fa-search"></i>
+                    </button>
                   </div>
-                </div>
+                  <div class="offcanvas-body">
+                    <div class="dropdown mt-3">
+                      <button class="btn btn-secondary cyanbg dropdown-toggle" type="button" id="drop_btn" data-bs-toggle="dropdown">
+                        Soccer
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="drop_btn">
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Teams</a></li>
+                        <li><a class="dropdown-item" href="#">Achievements</a></li>
+                      </ul>
+                    </div>
+                    <div class="dropdown mt-3">
+                      <button class="btn btn-secondary cyanbg dropdown-toggle" type="button" id="drop_btn" data-bs-toggle="dropdown">
+                        Football
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="drop-btn">
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Teams</a></li>
+                        <li><a class="dropdown-item" href="#">Achievements</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div> -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       
       <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li class="nav-item mx-1">
             <a class="nav-link" href="#about_us">About us</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item mx-1">
             <a class="nav-link" href="#how_hobbhub_works">How HobbHUB works</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item mx-1">
             <a class="nav-link" href="#contact_us">Get in Touch</a>
           </li>
           <li class="nav-item ms-2 d-lg-inline py-1">
@@ -139,7 +104,7 @@
                         <h1>
                             <div class="display-5 my-2" id="how_hobbhub_works">How HobbHUB works</div>
                         </h1>
-                        <p class="lead mx-4 px-5">In this section we will explain to you how to navigate in HobbHUB. On the navigation bar on the top, there is a button which opens a sidebar including every existing hobby in our website, as well as a search bar to make your exploring easier. Each hobby has a few open channel pages. There is the general chat where you can talk about your hobby with everyone. Aftewards the "Searching for a Team" section comes up. It is pretty self-explanatory. That's the page you will be looking for wether you are searching for a local team to join, or if you are searching for players to fill your team. Then we have the local events channel. There you can either organize an event or search for a local event to participate in. Then comes the "Achievemnts" section. That's where you can brag all about your success. Don't brag in a rude way of course, but share your achievemnts, explain how you got to that point and maybe share some encouraging words. We want to be nice to everyone after all. There may be more channels in the future. Each channel will have its own description so you know exactly what it's about. Enjoy your stay in HobbHUB and remember to keep working on your dreams to make them real one day</p>
+                        <p class="lead mx-4 px-5">In this section we will explain to you how to navigate in HobbHUB.<br>After you have made an account and have logged in, on the navigation bar on the top, you'll find a "Hobbie list" button which opens a sidebar including every existing hobby in our website, as well as a search bar to make your exploring easier. Each hobby has a few open channels.<br>There is the general chat where you can talk about your hobby with everyone.<br>Right next to it is the "Teams" section. That's where you'll be looking wether if you are searching for a local team to join, or if you are searching for players to fill your team.<br>Finally we have the "Achievemnts" tab. That's where you can show off your success. Don't brag in a rude way of course, but share your achievemnts, explain how you got to that point and maybe share some encouraging words. We want to be nice to everyone after all.<br>There may be more channels in the future. Enjoy your stay in HobbHUB and remember to keep working on your dreams to make them real one day</p>
                     </div>
             <!-- <div class="col-md-4 text-center d-none d-md-block"><img src="/assets/hobbHUB_logo.png" class="img-fluid px-5" alt="logo"></div> -->
             <div class="col-lg-5 text-center align-items-center">
@@ -149,39 +114,39 @@
                 <div class="container-lg px-5">
                   
                   <div class="text-center">
-                    <h2 class="display-1 pt-5" id="#contact_us">Contact us</h2>
+                    <h2 class="display-1 pt-5" id="contact_us">Contact us</h2>
                   </div>
                   <div class="row justify-content-center my-5">
                     <div class="col-lg-6">
-                      <form>
+                      <form id="contactForm">
                         <label for="name" class="form-label">Name:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
-                            <i class="bi bi-person-fill text-secondary"></i>
+                            <i name="name" class="bi bi-person-fill text-secondary"></i>
                           </span>
-                          <input type="text" id="name" class="form-control" placeholder="e.g. John" />
+                          <input name="name" type="text" id="name" class="form-control" placeholder="e.g. John" />
                         </div>
                         <label for="email" class="form-label">Email address:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
                             <i class="bi bi-envelope-fill text-secondary"></i>
                           </span>
-                          <input type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
+                          <input name="email" type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
                         </div>                        
-                        <label for="email" class="form-label">Topic:</label>
+                        <label for="topic" class="form-label">Topic:</label>
                         <div class="input-group mb-4">
                           <span class="input-group-text">
                             <i class="bi bi-question-circle text-secondary"></i>
                           </span>
-                          <input type="email" id="email" class="form-control" placeholder="e.g. john@example.com" />
+                          <input name="topic" type="text" id="topic" class="form-control" placeholder="I'd like this hobby to be added" />
                         </div>  
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" rows="3"></textarea>
+                            <textarea name="description" class="form-control" id="description" rows="3"></textarea>
                           </div>
                           
                         <div class="mb-4 pt-4 text-center">
-                          <button type="submit" class="btn btn-secondary">Register</button>
+                          <button type="submit" class="btn btn-primary cyanbg">Send feedback</button>
                         </div>
                       </form>
                     </div>
@@ -191,10 +156,7 @@
         </div>
         
     </section>
+    <script src="js/contact.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>
