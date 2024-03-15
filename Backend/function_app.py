@@ -133,6 +133,22 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             fullname = req_body.get('fullname')
             age = req_body.get('age')
             description = req_body.get('description')
+
+            emailregex = "^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+            passwordregex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+            fullnameregex = "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+
+            if not emailregex.match(emailregex, email):
+                raise ValueError("Email is not valid!")
+            
+            if not passwordregex.match(passwordregex, password):
+                raise ValueError("Password is not valid!")
+            
+            if not fullnameregex.match(fullnameregex, fullname):
+                raise ValueError("Full name is not valid!")
+            
+            if (age < 14) or (age > 150):
+                raise ValueError("Age is not valid!")
         except Exception as e:
             return func.HttpResponse(
                 str(e),
@@ -163,6 +179,9 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
     else:
         try:
             name = req_body.get('name')
+
+            if name == "":
+                raise ValueError ("Not a valid name!")
         except Exception as e:
             return func.HttpResponse(
                 str(e),
