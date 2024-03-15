@@ -47,12 +47,14 @@ function prepareMessageHtml(fullName, message, createdAt, isMine) {
     if(isMine){
         textStart = "end"
     }
-    return `<div name="msgOther" class="fs-3 text-${textStart}">
+    return `<div id="general-message-container" class="fs-3 text-${textStart}">
         <span class="text-decoration-underline" name="msgAuthor">${fullName} <br></span>
         <span class="fs-2" name="msg">${message} <br></span>
         <span class="fs-6 font-italic" name="msgDate">${createdAt} <br></span>
         </div>`;
 }
+
+
 
 function addMessageForm(sectionId){
     return `<div name="${sectionId}-form">
