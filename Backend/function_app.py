@@ -1,11 +1,16 @@
-import azure.functions as func
-import logging
+# import azure.functions as func
+# import logging
+from flask import Flask, jsonify, request as req
+from flask_cors import CORS
 
 import psycopg2
 import bcrypt
 import json
 import re
 from datetime import datetime
+
+app = Flask(__name__)
+CORS(app)
 
 def create_connection():
     conn = psycopg2.connect(
@@ -239,12 +244,10 @@ def get_all_messages(channel_id):
 
     return response_formatted
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+# app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="create_user")
-def create_user(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called create_user function')
-
+# @app.route(route="create_user")
+def create_user():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -291,10 +294,8 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="create_hobby")
-def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called create_hobby function')
-
+# @app.route(route="create_hobby")
+def create_hobby():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -324,10 +325,8 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="create_channel")
-def create_channel(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called create_channel function')
-
+# @app.route(route="create_channel")
+def create_channel():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -358,10 +357,8 @@ def create_channel(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="create_message")
-def create_message(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called create_message function')
-
+# @app.route(route="create_message")
+def create_message():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -393,10 +390,8 @@ def create_message(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="login_user")
-def login_user(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called login_user function')
-
+# @app.route(route="login_user")
+def login_user():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -427,10 +422,8 @@ def login_user(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="fetch_hobbies")
-def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called fetch_hobbies function')
-
+# @app.route(route="fetch_hobbies")
+def fetch_hobbies():
     try:
         response = get_all_hobbies()
         return func.HttpResponse(
@@ -446,10 +439,8 @@ def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="fetch_channels")
-def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called fetch_channels function')
-
+# @app.route(route="fetch_channels")
+def fetch_channels():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -479,10 +470,9 @@ def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
             status_code=400
         )
 
-@app.route(route="fetch_messages")
-def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger called fetch_messages function')
-
+# @app.route(route="fetch_messages")
+@app.route('/fetch_messages', methods=['POST'])
+def fetch_messages():
     try:
         # create_tables()
         req_body = req.get_json()
@@ -490,24 +480,25 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
         pass
     else:
         try:
-            channel_id = req_body.get('channel_id')
+            channel_id = req_body['channel_id']
         except Exception as e:
-            return func.HttpResponse(
-                str(e),
-                status_code=400
-            )
+            return jsonify({
+                "message": str(e),
+                "status_code": 400
+            })
 
     try:
         response = get_all_messages(channel_id)
-        return func.HttpResponse(
-            json.dumps({
-                "message": "Messages fettched successfully.",
-                "response": response
-            }),
-            status_code=202
-        )
+        return jsonify({
+            "message": "Messages fettched successfully.",
+            "response": response,
+            "status_code": 202
+        })
     except Exception as e:
-        return func.HttpResponse(
-            str(e),
-            status_code=400
-        )
+        return jsonify({
+            "message": str(e),
+            "status_code": 400
+        })
+
+if __name__ == '__main__':
+    app.run() # Run the Flask app
