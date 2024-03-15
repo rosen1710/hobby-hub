@@ -135,9 +135,9 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             age = req_body.get('age')
             description = req_body.get('description')
 
-            emailregex = re.compile(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
-            passwordregex = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$")
-            fullnameregex = re.compile(r"\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+")
+            emailregex = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
+            passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
+            fullnameregex = re.compile(r"[A-Za-z]{2,25}||\s[A-Za-z]{2,25}")
 
             if not re.fullmatch(emailregex, email):
                 raise ValueError("Email is not valid!")
