@@ -1,7 +1,7 @@
 myUserId = 52;
 myName = "You";
 
-otherSenderName = "Ivan";
+otherSenderName = "Niki";
 
 function loadMessages(sectionId){
 
