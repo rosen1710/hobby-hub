@@ -5,7 +5,6 @@ from flask_cors import CORS
 
 import psycopg2
 import bcrypt
-import json
 import re
 from datetime import datetime
 
@@ -146,13 +145,13 @@ def add_channel(name, hobby_id):
     conn.commit()
     conn.close()
 
-def add_message(name, user_id, channel_id):
+def add_message(text, user_id, channel_id):
     conn = create_connection()
     cur = conn.cursor()
 
     try:
         cur.execute("INSERT INTO message (text, user_id, channel_id) VALUES (%s, %s, %s) RETURNING id;",
-            (name, user_id, channel_id))
+            (text, user_id, channel_id))
     except psycopg2.errors.UniqueViolation:
         conn.commit()
         conn.close()
@@ -366,12 +365,12 @@ def create_message():
         pass
     else:
         try:
-            name = req_body['name']
+            text = req_body['text']
             user_id = req_body['user_id']
             channel_id = req_body['channel_id']
 
-            if name == "":
-                raise ValueError ("Not a valid name!")
+            if text == "":
+                raise ValueError ("Not a valid text!")
         except Exception as e:
             return jsonify({
                 "message": str(e),
@@ -379,7 +378,7 @@ def create_message():
             })
 
     try:
-        add_message(name, user_id, channel_id)
+        add_message(text, user_id, channel_id)
         return jsonify({
             "message": "Message added successfully.",
             "status_code": 200
