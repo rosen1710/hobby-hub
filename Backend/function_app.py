@@ -6,7 +6,7 @@ from flask_cors import CORS
 import psycopg2
 import bcrypt
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -197,7 +197,7 @@ def get_all_hobbies():
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y])
+                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
 
     conn.close()
 
@@ -217,7 +217,7 @@ def get_all_channels(hobby_id):
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y])
+                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
 
     conn.close()
 
@@ -237,7 +237,7 @@ def get_all_messages(channel_id):
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y])
+                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
 
     conn.close()
 
