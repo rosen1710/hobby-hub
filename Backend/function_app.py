@@ -13,7 +13,7 @@ CORS(app)
 
 def create_connection():
     conn = psycopg2.connect(
-        dbname="postgres",
+        dbname="hobby_hub_db",
         user="hobby_hub",
         password="HobbHUB",
         host="my-postgresql-db.postgres.database.azure.com",
