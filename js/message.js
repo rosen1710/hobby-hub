@@ -1,7 +1,9 @@
-myUserId = 52;
+myUserId = 2;
 myName = "You";
 
-otherSenderName = "Niki";
+otherSenderName = "Ivan Petrov";
+
+channelId = 1;
 
 function loadMessages(sectionId){
 
@@ -13,13 +15,14 @@ function loadMessages(sectionId){
 }
 
 function fetchMessages(sectionId) {
-    fetch('http://localhost:5000/fetch_messages', {
+    fetch('http://localhost:5000/fetch_messageshttps://hobby-hub.azurewebsites.net/api/fetch_messages', {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            channel_id: 23
+            channel_id: channelId
         })
     })
     .then(response => response.json())
