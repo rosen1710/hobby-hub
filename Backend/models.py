@@ -2,6 +2,7 @@ from sqlalchemy import Text, Integer, Double, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from datetime import datetime
 from typing import List
+import bcrypt
 
 class Base(DeclarativeBase):
     pass
@@ -10,10 +11,18 @@ class User(Base):
     __tablename__ = "hhuser"
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(Text, unique=True)
+    password_hash: Mapped[str] = mapped_column(Text)
+    fullname: Mapped[str] = mapped_column(Text)
     age: Mapped[int] = mapped_column(Integer)
+    description: Mapped[str] = mapped_column(Text)
 
-    def __init__(self, email, age):
-        pass
+    def __init__(self, email, password, fullname, age, description):
+        self.email = email
+        self.password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        self.fullname = fullname
+        self.age = age
+        self.description = description
+
 
 class Hobby(Base):
     __tablename__ = "hobby"
