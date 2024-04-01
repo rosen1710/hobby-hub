@@ -5,7 +5,7 @@ otherSenderName = "Ivan Petrov";
 
 channelId = 1;
 
-function loadMessages(sectionId){
+function loadMessages(sectionId) {
 
     fetchMessages(sectionId);
 
