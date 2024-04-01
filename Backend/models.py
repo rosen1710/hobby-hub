@@ -35,3 +35,13 @@ class Hobby(Base):
         self.name = name
         self.aproved = False
         self.created_at = datetime.now()
+
+class Hobby_User(Base):
+    __tablename__ = "hobby_user"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("hhuser.id"))
+    hobby_id: Mapped[int] = mapped_column(ForeignKey("hobby.id"))
+
+    def __init__ (self, user_id, hobby_id):
+        self.user_id = user_id
+        self.hobby_id =  hobby_id
