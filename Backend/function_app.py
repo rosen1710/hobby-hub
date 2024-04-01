@@ -1,250 +1,28 @@
 import azure.functions as func
 import logging
 
-import psycopg2
 import bcrypt
 import json
+import os
 import re
-from datetime import datetime, timedelta
+from datetime import timedelta
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import Session
+import sqlalchemy.exc
 
-def create_connection():
-    conn = psycopg2.connect(
-        dbname="hobby_hub_db",
-        user="hobby_hub",
-        password="HobbHUB",
-        host="my-postgresql-db.postgres.database.azure.com",
-        port=5432
-    )
-    return conn
+from models import *
 
-# Create tables if they don't exists
-def create_tables_in_the_db():
-    try:
-        conn = create_connection()
-        cur = conn.cursor()
-
-        create_table = """
-            CREATE TABLE IF NOT EXISTS hhuser (
-                id SERIAL PRIMARY KEY,
-                email TEXT NOT NULL UNIQUE,
-                password_hash TEXT NOT NULL,
-                fullname TEXT NOT NULL,
-                age INT NOT NULL,
-                description TEXT NOT NULL
-            );
-        """
-        cur.execute(create_table)
-
-        create_table = """
-            CREATE TABLE IF NOT EXISTS hobby (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                approved BOOLEAN NOT NULL
-            );
-        """
-        cur.execute(create_table)
-
-        create_table = """
-            CREATE TABLE IF NOT EXISTS hobby_user (
-                id SERIAL PRIMARY KEY,
-                user_id INT NOT NULL REFERENCES hhuser(id),
-                hobby_id INT NOT NULL REFERENCES hobby(id)
-            );
-        """
-        cur.execute(create_table)
-
-        create_table = """
-            CREATE TABLE IF NOT EXISTS channel (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                hobby_id INT NOT NULL REFERENCES hobby(id),
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-            );
-        """
-        cur.execute(create_table)
-
-        create_table = """
-            CREATE TABLE IF NOT EXISTS message (
-                id SERIAL PRIMARY KEY,
-                text TEXT NOT NULL,
-                user_id INT REFERENCES hhuser(id),
-                channel_id INT NOT NULL REFERENCES channel(id),
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-            );
-        """
-        cur.execute(create_table)
-
-        conn.commit()
-        conn.close()
-    except:
-        raise Exception("Error occurred while creating or accessing tables")
-
-def add_user(email, password, fullname, age, description):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("INSERT INTO hhuser (email, password_hash, fullname, age, description) VALUES (%s, %s, %s, %s, %s) RETURNING id;",
-            (email, bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8"), fullname, age, description))
-    except psycopg2.errors.UniqueViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.UniqueViolation("User with this email already exists!")
-    except:
-        conn.commit()
-        conn.close()
-        raise Exception("Unhandled exception occurred!")
-
-    conn.commit()
-    conn.close()
-
-def add_hobby(name):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("INSERT INTO hobby (name, approved) VALUES (%s, %s) RETURNING id;",
-            (name, False))
-    except psycopg2.errors.UniqueViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.UniqueViolation("This hobby already exists!")
-    except:
-        conn.commit()
-        conn.close()
-        raise Exception("Unhandled exception occurred!")
-
-    conn.commit()
-    conn.close()
-
-def add_channel(name, hobby_id):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("INSERT INTO channel (name, hobby_id) VALUES (%s, %s) RETURNING id;",
-            (name, hobby_id))
-    except psycopg2.errors.UniqueViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.UniqueViolation("This channel already exists!")
-    except psycopg2.errors.ForeignKeyViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exist!")
-    except:
-        conn.commit()
-        conn.close()
-        raise Exception("Unhandled exception occurred!")
-
-    conn.commit()
-    conn.close()
-
-def add_message(text, user_id, channel_id):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("INSERT INTO message (text, user_id, channel_id) VALUES (%s, %s, %s) RETURNING id;",
-            (text, user_id, channel_id))
-    except psycopg2.errors.UniqueViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.UniqueViolation("This message already exists!")
-    except psycopg2.errors.ForeignKeyViolation:
-        conn.commit()
-        conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exist!")
-    except:
-        conn.commit()
-        conn.close()
-        raise Exception("Unhandled exception occurred!")
-
-    conn.commit()
-    conn.close()
-
-def login(email, password):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM hhuser WHERE email = %s", (email,))
-
-    response = cur.fetchone()
-
-    conn.close()
-
-    if not bcrypt.checkpw(password.encode("utf-8"), response[2].encode("utf-8")):
-        raise Exception("Wrong password provided!")
-
-    return response
-
-def get_all_hobbies():
-    conn = create_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM hobby")
-    response = cur.fetchall()
-
-    response_formatted = []
-
-    for x in range(len(response)):
-        element = list(response[x])
-        response_formatted.append(element)
-        for y in range(len(element)):
-            if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
-
-    conn.close()
-
-    return response_formatted
-
-def get_all_channels(hobby_id):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM channel WHERE hobby_id = %s", (hobby_id,))
-    response = cur.fetchall()
-
-    response_formatted = []
-
-    for x in range(len(response)):
-        element = list(response[x])
-        response_formatted.append(element)
-        for y in range(len(element)):
-            if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
-
-    conn.close()
-
-    return response_formatted
-
-def get_all_messages(channel_id):
-    conn = create_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM message WHERE channel_id = %s", (channel_id,))
-    response = cur.fetchall()
-
-    response_formatted = []
-
-    for x in range(len(response)):
-        element = list(response[x])
-        response_formatted.append(element)
-        for y in range(len(element)):
-            if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
-
-    conn.close()
-
-    return response_formatted
+def create_db_engine():
+    return create_engine(os.environ['POSTGRESQLCONNSTR_DB_CONNECTION_STRING'])
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="create_tables")
 def create_tables(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        create_tables_in_the_db()
+        engine = create_db_engine()
+
+        Base.metadata.create_all(engine)
 
         return func.HttpResponse(
             json.dumps({
@@ -279,23 +57,42 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
 
         if not re.fullmatch(emailregex, email):
             raise ValueError("Email is not valid!")
-        
+
         if not re.fullmatch(passwordregex, password):
             raise ValueError("Password is not valid!")
-        
+
         if not re.fullmatch(fullnameregex, fullname):
             raise ValueError("Full name is not valid!")
-        
+
         if (age < 14) or (age > 150):
             raise ValueError("Age is not valid!")
 
-        add_user(email, password, fullname, age, description)
+        engine = create_db_engine()
+
+        with Session(engine) as session:
+            session.add(
+                User(
+                    email=email,
+                    password=password,
+                    fullname=fullname,
+                    age=age,
+                    description=description
+                )
+            )
+            session.commit()
 
         return func.HttpResponse(
             json.dumps({
                 "message": "User was added successfully"
             }),
             status_code=200
+        )
+    except sqlalchemy.exc.IntegrityError:
+        return func.HttpResponse(
+            json.dumps({
+                "message": "User with this email already exists!"
+            }),
+            status_code=400
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
@@ -317,13 +114,28 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
         if name == "":
             raise ValueError ("Not a valid name!")
 
-        add_hobby(name)
+        engine = create_db_engine()
+
+        with Session(engine) as session:
+            session.add(
+                Hobby(
+                    name=name
+                )
+            )
+            session.commit()
 
         return func.HttpResponse(
             json.dumps({
                 "message": "Hobby was added successfully"
             }),
             status_code=200
+        )
+    except sqlalchemy.exc.IntegrityError:
+        return func.HttpResponse(
+            json.dumps({
+                "message": "This hobby already exists!"
+            }),
+            status_code=400
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
@@ -346,7 +158,19 @@ def create_channel(req: func.HttpRequest) -> func.HttpResponse:
         if name == "":
             raise ValueError ("Not a valid name!")
 
-        add_channel(name, hobby_id)
+        engine = create_db_engine()
+
+        with Session(engine) as session:
+            hobby = session.scalar(select(Hobby).where(Hobby.id == hobby_id))
+            if hobby is None:
+                raise ValueError("Hobby with this id does not exist!")
+            session.add(
+                Channel(
+                    name=name,
+                    hobby_id=hobby_id
+                )
+            )
+            session.commit()
 
         return func.HttpResponse(
             json.dumps({
@@ -371,12 +195,36 @@ def create_message(req: func.HttpRequest) -> func.HttpResponse:
 
         text = req_body.get('text')
         user_id = req_body.get('user_id')
+        password = req_body.get('password')
         channel_id = req_body.get('channel_id')
 
         if text == "":
-            raise ValueError ("Not a valid text!")
+            raise ValueError ("You can't send an empty message!")
 
-        add_message(text, user_id, channel_id)
+        engine = create_db_engine()
+
+        with Session(engine) as session:
+            user = session.scalar(select(User).where(User.id == user_id))
+
+            if user is None:
+                raise ValueError("User with this id does not exist!")
+
+            if not bcrypt.checkpw(password.encode("utf-8"), user.password_hash.encode("utf-8")):
+                raise Exception("Wrong password provided!")
+
+            channel = session.scalar(select(Channel).where(Channel.id == channel_id))
+
+            if channel is None:
+                raise ValueError("Channel with this id does not exist!")
+
+            session.add(
+                Message(
+                    text=text,
+                    user_id=user_id,
+                    channel_id=channel_id
+                )
+            )
+            session.commit()
 
         return func.HttpResponse(
             json.dumps({
@@ -402,12 +250,29 @@ def login_user(req: func.HttpRequest) -> func.HttpResponse:
         email = req_body.get('email')
         password = req_body.get('password')
 
-        response = login(email, password)
+        engine = create_db_engine()
+
+        user_data = {}
+
+        with Session(engine) as session:
+            user = session.scalar(select(User).where(User.email == email))
+
+            if user is None:
+                raise Exception("User with this email does not exist!")
+
+            if not bcrypt.checkpw(password.encode("utf-8"), user.password_hash.encode("utf-8")):
+                raise Exception("Wrong password provided!")
+
+            user_data["id"] = user.id
+            user_data["email"] = user.email
+            user_data["fullname"] = user.fullname
+            user_data["age"] = user.age
+            user_data["description"] = user.description
 
         return func.HttpResponse(
             json.dumps({
                 "message": "User was logged in successfully",
-                "user": response
+                "user": user_data
             }),
             status_code=202
         )
@@ -424,12 +289,23 @@ def login_user(req: func.HttpRequest) -> func.HttpResponse:
 @app.route(route="fetch_hobbies")
 def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        response = get_all_hobbies()
+        engine = create_db_engine()
+
+        hobbies = []
+
+        with Session(engine) as session:
+            for hobby in session.scalars(select(Hobby)):
+                hobbies.append({
+                    "id": hobby.id,
+                    "name": hobby.name,
+                    "approved": hobby.approved,
+                    "created_at": str(hobby.created_at + timedelta(hours=3))
+                })
 
         return func.HttpResponse(
             json.dumps({
                 "message": "Hobbies were fetched successfully",
-                "hobbies": response
+                "hobbies": hobbies
             }),
             status_code=202
         )
@@ -450,12 +326,24 @@ def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
 
         hobby_id = req_body.get('hobby_id')
 
-        response = get_all_channels(hobby_id)
+        engine = create_db_engine()
+
+        channels = []
+
+        with Session(engine) as session:
+            for channel in session.scalars(select(Channel).where(Channel.hobby_id == hobby_id)):
+                channels.append({
+                    "id": channel.id,
+                    "name": channel.name,
+                    "hobby_id": channel.hobby_id,
+                    "approved": channel.approved,
+                    "created_at": str(channel.created_at + timedelta(hours=3))
+                })
 
         return func.HttpResponse(
             json.dumps({
                 "message": "Channels were fetched successfully",
-                "channels": response
+                "channels": channels
             }),
             status_code=202
         )
@@ -476,12 +364,24 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
 
         channel_id = req_body.get('channel_id')
 
-        response = get_all_messages(channel_id)
+        engine = create_db_engine()
+
+        messages = []
+
+        with Session(engine) as session:
+            for message in session.scalars(select(Message).where(Message.channel_id == channel_id)):
+                messages.append({
+                    "id": message.id,
+                    "text": message.text,
+                    "user_id": message.user_id,
+                    "channel_id": message.channel_id,
+                    "created_at": str(message.created_at + timedelta(hours=3))
+                })
 
         return func.HttpResponse(
             json.dumps({
                 "message": "Messages were fetched successfully",
-                "messages": response
+                "messages": messages
             }),
             status_code=202
         )

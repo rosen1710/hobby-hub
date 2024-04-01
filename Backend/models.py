@@ -1,5 +1,5 @@
 from sqlalchemy import Text, Integer, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from datetime import datetime
 import bcrypt
 
@@ -26,13 +26,13 @@ class User(Base):
 class Hobby(Base):
     __tablename__ = "hobby"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(Text)
-    aproved: Mapped[bool] = mapped_column(Boolean)
+    name: Mapped[str] = mapped_column(Text, unique=True)
+    approved: Mapped[bool] = mapped_column(Boolean)
     created_at: Mapped[DateTime] = mapped_column(DateTime)
 
     def __init__(self, name):
         self.name = name
-        self.aproved = False
+        self.approved = False
         self.created_at = datetime.now()
 
 class Hobby_User(Base):
@@ -50,13 +50,13 @@ class Channel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(Text)
     hobby_id: Mapped[int] = mapped_column(ForeignKey("hobby.id"))
-    aproved: Mapped[bool] = mapped_column(Boolean)
+    approved: Mapped[bool] = mapped_column(Boolean)
     created_at: Mapped[DateTime] = mapped_column(DateTime)
 
     def __init__(self, name, hobby_id):
         self.name = name
         self.hobby_id = hobby_id
-        self.aproved = False
+        self.approved = False
         self.created_at = datetime.now()
 
 class Message(Base):
