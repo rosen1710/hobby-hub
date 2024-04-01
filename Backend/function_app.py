@@ -132,7 +132,7 @@ def add_channel(name, hobby_id):
     except psycopg2.errors.ForeignKeyViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exists!")
+        raise psycopg2.errors.ForeignKeyViolation("Hobby with this id does not exist!")
     except:
         conn.commit()
         conn.close()
@@ -155,7 +155,7 @@ def add_message(text, user_id, channel_id):
     except psycopg2.errors.ForeignKeyViolation:
         conn.commit()
         conn.close()
-        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exists!")
+        raise psycopg2.errors.ForeignKeyViolation("User or hobby with this id does not exist!")
     except:
         conn.commit()
         conn.close()
@@ -428,7 +428,7 @@ def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
 
         return func.HttpResponse(
             json.dumps({
-                "message": "Hobbies was fetched successfully",
+                "message": "Hobbies were fetched successfully",
                 "hobbies": response
             }),
             status_code=202
@@ -454,7 +454,7 @@ def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
 
         return func.HttpResponse(
             json.dumps({
-                "message": "Channels was fetched successfully",
+                "message": "Channels were fetched successfully",
                 "channels": response
             }),
             status_code=202
@@ -480,7 +480,7 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
 
         return func.HttpResponse(
             json.dumps({
-                "message": "Messages was fetched successfully",
+                "message": "Messages were fetched successfully",
                 "messages": response
             }),
             status_code=202
