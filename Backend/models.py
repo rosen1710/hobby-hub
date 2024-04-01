@@ -1,7 +1,6 @@
-from sqlalchemy import Text, Integer, Double, DateTime, ForeignKey, Boolean
+from sqlalchemy import Text, Integer, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from datetime import datetime
-from typing import List
 import bcrypt
 
 class Base(DeclarativeBase):
@@ -45,3 +44,31 @@ class Hobby_User(Base):
     def __init__ (self, user_id, hobby_id):
         self.user_id = user_id
         self.hobby_id =  hobby_id
+
+class Channel(Base):
+    __tablename__ = "channel"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(Text)
+    hobby_id: Mapped[int] = mapped_column(ForeignKey("hobby.id"))
+    aproved: Mapped[bool] = mapped_column(Boolean)
+    created_at: Mapped[DateTime] = mapped_column(DateTime)
+
+    def __init__(self, name, hobby_id):
+        self.name = name
+        self.hobby_id = hobby_id
+        self.aproved = False
+        self.created_at = datetime.now()
+
+class Message(Base):
+    __tablename__ = "message"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    text: Mapped[str] = mapped_column(Text)
+    user_id: Mapped[int] = mapped_column(ForeignKey("hhuser.id"))
+    channel_id: Mapped[int] = mapped_column(ForeignKey("channel.id"))
+    created_at: Mapped[DateTime] = mapped_column(DateTime)
+
+    def __init__(self, text, user_id, channel_id):
+        self.text = text
+        self.user_id = user_id
+        self.channel_id = channel_id
+        self.created_at = datetime.now()
