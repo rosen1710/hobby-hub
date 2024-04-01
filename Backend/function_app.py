@@ -1,15 +1,11 @@
-# import azure.functions as func
-# import logging
-from flask import Flask, jsonify, request as req
-from flask_cors import CORS
+import azure.functions as func
+import logging
 
 import psycopg2
 import bcrypt
+import json
 import re
 from datetime import datetime, timedelta
-
-app = Flask(__name__)
-CORS(app)
 
 def create_connection():
     conn = psycopg2.connect(
@@ -22,7 +18,7 @@ def create_connection():
     return conn
 
 # Create tables if they don't exists
-def create_tables():
+def create_tables_in_the_db():
     try:
         conn = create_connection()
         cur = conn.cursor()
@@ -197,7 +193,7 @@ def get_all_hobbies():
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
+                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
 
     conn.close()
 
@@ -217,7 +213,7 @@ def get_all_channels(hobby_id):
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
+                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
 
     conn.close()
 
@@ -237,262 +233,264 @@ def get_all_messages(channel_id):
         response_formatted.append(element)
         for y in range(len(element)):
             if isinstance(element[y], datetime):
-                response_formatted[x][y] = str(element[y] + timedelta(hours=2))
+                response_formatted[x][y] = str(element[y] + timedelta(hours=3))
 
     conn.close()
 
     return response_formatted
 
-# app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-# @app.route(route="create_user")
-@app.route('/create_user', methods=['POST'])
-def create_user():
+@app.route(route="create_tables")
+def create_tables(req: func.HttpRequest) -> func.HttpResponse:
+    try:
+        create_tables_in_the_db()
+
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Tables were created successfully or already exist"
+            }),
+            status_code=200
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="create_user")
+def create_user(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            email = req_body['email']
-            password = req_body['password']
-            fullname = req_body['fullname']
-            age = req_body['age']
-            description = req_body['description']
 
-            emailregex = re.compile(r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
-            passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
-            fullnameregex = re.compile(r"[A-Za-z]{2,25}\s[A-Za-z]{2,25}")
+        email = req_body.get('email')
+        password = req_body.get('password')
+        fullname = req_body.get('fullname')
+        age = req_body.get('age')
+        description = req_body.get('description')
 
-            if not re.fullmatch(emailregex, email):
-                raise ValueError("Email is not valid!")
-            
-            if not re.fullmatch(passwordregex, password):
-                raise ValueError("Password is not valid!")
-            
-            if not re.fullmatch(fullnameregex, fullname):
-                raise ValueError("Full name is not valid!")
-            
-            if (age < 14) or (age > 150):
-                raise ValueError("Age is not valid!")
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
+        emailregex = re.compile(r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
+        passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
+        fullnameregex = re.compile(r"[A-Za-z]{2,25}\s[A-Za-z]{2,25}")
 
-    try:
+        if not re.fullmatch(emailregex, email):
+            raise ValueError("Email is not valid!")
+        
+        if not re.fullmatch(passwordregex, password):
+            raise ValueError("Password is not valid!")
+        
+        if not re.fullmatch(fullnameregex, fullname):
+            raise ValueError("Full name is not valid!")
+        
+        if (age < 14) or (age > 150):
+            raise ValueError("Age is not valid!")
+
         add_user(email, password, fullname, age, description)
-        return jsonify({
-            "message": "User added successfully.",
-            "status_code": 200
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="create_hobby")
-@app.route('/create_hobby', methods=['POST'])
-def create_hobby():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "User was added successfully"
+            }),
+            status_code=200
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="create_hobby")
+def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            name = req_body['name']
 
-            if name == "":
-                raise ValueError ("Not a valid name!")
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
+        name = req_body.get('name')
 
-    try:
+        if name == "":
+            raise ValueError ("Not a valid name!")
+
         add_hobby(name)
-        return jsonify({
-            "message": "Hobby added successfully.",
-            "status_code": 200
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="create_channel")
-@app.route('/create_channel', methods=['POST'])
-def create_channel():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Hobby was added successfully"
+            }),
+            status_code=200
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="create_channel")
+def create_channel(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            name = req_body['name']
-            hobby_id = req_body['hobby_id']
 
-            if name == "":
-                raise ValueError ("Not a valid name!")
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
+        name = req_body.get('name')
+        hobby_id = req_body.get('hobby_id')
 
-    try:
+        if name == "":
+            raise ValueError ("Not a valid name!")
+
         add_channel(name, hobby_id)
-        return jsonify({
-            "message": "Channel added successfully.",
-            "status_code": 200
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="create_message")
-@app.route('/create_message', methods=['POST'])
-def create_message():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Channel was added successfully"
+            }),
+            status_code=200
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="create_message")
+def create_message(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            text = req_body['text']
-            user_id = req_body['user_id']
-            channel_id = req_body['channel_id']
 
-            if text == "":
-                raise ValueError ("Not a valid text!")
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
+        text = req_body.get('text')
+        user_id = req_body.get('user_id')
+        channel_id = req_body.get('channel_id')
 
-    try:
+        if text == "":
+            raise ValueError ("Not a valid text!")
+
         add_message(text, user_id, channel_id)
-        return jsonify({
-            "message": "Message added successfully.",
-            "status_code": 200
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="login_user")
-@app.route('/login_user', methods=['POST'])
-def login_user():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Message was added successfully"
+            }),
+            status_code=200
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="login_user")
+def login_user(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            email = req_body['email']
-            password = req_body['password']
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
 
-    try:
+        email = req_body.get('email')
+        password = req_body.get('password')
+
         response = login(email, password)
-        return jsonify({
-            "message": "User logged in successfully.",
-            "response": response,
-            "status_code": 202
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="fetch_hobbies")
-@app.route('/fetch_hobbies', methods=['POST'])
-def fetch_hobbies():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "User was logged in successfully",
+                "user": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="fetch_hobbies")
+def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
     try:
         response = get_all_hobbies()
-        return jsonify({
-            "message": "Hobbies fettched successfully.",
-            "response": response,
-            "status_code": 202
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="fetch_channels")
-@app.route('/fetch_channels', methods=['POST'])
-def fetch_channels():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Hobbies was fetched successfully",
+                "hobbies": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="fetch_channels")
+def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            hobby_id = req_body['hobby_id']
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
 
-    try:
+        hobby_id = req_body.get('hobby_id')
+
         response = get_all_channels(hobby_id)
-        return jsonify({
-            "message": "Channels fettched successfully.",
-            "response": response,
-            "status_code": 202
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-# @app.route(route="fetch_messages")
-@app.route('/fetch_messages', methods=['POST'])
-def fetch_messages():
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Channels was fetched successfully",
+                "channels": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
+
+@app.route(route="fetch_messages")
+def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
-        try:
-            channel_id = req_body['channel_id']
-        except Exception as e:
-            return jsonify({
-                "message": str(e),
-                "status_code": 400
-            })
 
-    try:
+        channel_id = req_body.get('channel_id')
+
         response = get_all_messages(channel_id)
-        return jsonify({
-            "message": "Messages fettched successfully.",
-            "response": response,
-            "status_code": 202
-        })
-    except Exception as e:
-        return jsonify({
-            "message": str(e),
-            "status_code": 400
-        })
 
-if __name__ == '__main__':
-    create_tables()
-    app.run() # Run the Flask app
+        return func.HttpResponse(
+            json.dumps({
+                "message": "Messages was fetched successfully",
+                "messages": response
+            }),
+            status_code=202
+        )
+    except Exception as e:
+        logging.exception(f"{str(type(e))}: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({
+                "exception": str(type(e)),
+                "message": str(e)
+            }),
+            status_code=400
+        )
