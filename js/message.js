@@ -25,9 +25,11 @@ function fetchMessages(sectionId) {
             channel_id: channelId
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        //console.log(data);
+    .then(response => {
+        console.log(response);
+
+        data = response.json();
+
         console.log(data.messages);
 
         section = document.getElementById(sectionId);
