@@ -385,7 +385,7 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
                 "message": "Messages were fetched successfully",
                 "messages": messages
             }),
-            mimetype="application/json",
+            # mimetype="application/json",
             status_code=202
         )
     except Exception as e:

@@ -11,7 +11,7 @@ function loadMessages(sectionId) {
 
     setInterval(() => {
         fetchMessages(sectionId)
-    }, 2000);
+    }, 60000/*2000*/);
 }
 
 function fetchMessages(sectionId) {
