@@ -15,7 +15,7 @@ function loadMessages(sectionId) {
 }
 
 function fetchMessages(sectionId) {
-    fetch('http://localhost:5000/fetch_messageshttps://hobby-hub.azurewebsites.net/api/fetch_messages', {
+    fetch('https://hobby-hub.azurewebsites.net/api/fetch_messages', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
