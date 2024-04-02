@@ -28,7 +28,7 @@ function fetchMessages(sectionId) {
     .then(response => response.json())
     .then(data => {
         //console.log(data);
-        console.log(data.response);
+        console.log(data.messages);
 
         section = document.getElementById(sectionId);
 
@@ -40,12 +40,12 @@ function fetchMessages(sectionId) {
         section.innerHTML="";
         let messageHtml =`<div class="container lg-6 pt-2" id="${sectionId}-message-container">`;
 
-        data.response.forEach(row => {
-            let fullName = otherSenderName,
-            message = row[1],
-            createdAt=row[4].split(".")[0];
+        data.messages.forEach(row => {
+            let fullName = row.user_fullname,
+            message = row.text,
+            createdAt=row.created_at.split(".")[0];
             let isMine = false;
-            if(row[2] == myUserId) {
+            if(row.user_id == myUserId) {
                 isMine = true;
                 fullName = myName;
             }

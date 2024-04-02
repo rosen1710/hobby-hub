@@ -370,10 +370,12 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
 
         with Session(engine) as session:
             for message in session.scalars(select(Message).where(Message.channel_id == channel_id)):
+                user = session.scalar(select(User).where(User.id == message.user_id))
                 messages.append({
                     "id": message.id,
                     "text": message.text,
                     "user_id": message.user_id,
+                    "user_fullname": user.fullname,
                     "channel_id": message.channel_id,
                     "created_at": str(message.created_at + timedelta(hours=3))
                 })
