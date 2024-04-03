@@ -87,7 +87,7 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             }),
             status_code=200
         )
-    except sqlalchemy.exc.IntegrityError:
+    except sqlalchemy.exc.IntegrityError as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
         return func.HttpResponse(
             json.dumps({
@@ -132,7 +132,7 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
             }),
             status_code=200
         )
-    except sqlalchemy.exc.IntegrityError:
+    except sqlalchemy.exc.IntegrityError as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
         return func.HttpResponse(
             json.dumps({
