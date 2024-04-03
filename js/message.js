@@ -1,8 +1,6 @@
 myUserId = 2;
 myName = "You";
 
-otherSenderName = "Ivan Petrov";
-
 channelId = 1;
 
 function loadMessages(sectionId) {
@@ -11,54 +9,56 @@ function loadMessages(sectionId) {
 
     setInterval(() => {
         fetchMessages(sectionId)
-    }, 60000/*2000*/);
+    }, 20000);
 }
 
-function fetchMessages(sectionId) {
-    fetch('https://hobby-hub.azurewebsites.net/api/fetch_messages', {
+async function fetchMessages(sectionId) {
+    response = await fetch('https://hobby-hub.azurewebsites.net/api/fetch_messages', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             channel_id: channelId
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-
-        console.log(data.messages);
-
-        section = document.getElementById(sectionId);
-
-        try {
-            prev_value = document.getElementById(`${sectionId}-message`).value;
-        } catch (error) {
-            prev_value = "";
-        }
-        section.innerHTML="";
-        let messageHtml =`<div class="container lg-6 pt-2" id="${sectionId}-message-container">`;
-
-        data.messages.forEach(row => {
-            let fullName = row.user_fullname,
-            message = row.text,
-            createdAt=row.created_at.split(".")[0];
-            let isMine = false;
-            if(row.user_id == myUserId) {
-                isMine = true;
-                fullName = myName;
-            }
-            messageHtml="";
-            messageHtml += prepareMessageHtml(fullName, message, createdAt, isMine);
-            messageHtml +='</div>';
-            section.innerHTML+=messageHtml;
-        });
-        section.innerHTML+=addMessageForm(sectionId);
-        document.getElementById(`${sectionId}-message`).value = prev_value;
-        document.getElementById(`${sectionId}-message`).focus();
     });
+    // console.log(response);
+
+    // console.log(response.status);
+
+    data = await response.json();
+
+    // console.log(data);
+
+    // console.log(data.messages);
+
+    section = document.getElementById(sectionId);
+
+    try {
+        prev_value = document.getElementById(`${sectionId}-message`).value;
+    } catch (error) {
+        prev_value = "";
+    }
+    section.innerHTML="";
+    let messageHtml =`<div class="container lg-6 pt-2" id="${sectionId}-message-container">`;
+
+    data.messages.forEach(row => {
+        let fullName = row.user_fullname,
+        message = row.text,
+        createdAt=row.created_at.split(".")[0];
+        let isMine = false;
+        if(row.user_id == myUserId) {
+            isMine = true;
+            fullName = myName;
+        }
+        messageHtml="";
+        messageHtml += prepareMessageHtml(fullName, message, createdAt, isMine);
+        messageHtml +='</div>';
+        section.innerHTML+=messageHtml;
+    });
+    section.innerHTML+=addMessageForm(sectionId);
+    document.getElementById(`${sectionId}-message`).value = prev_value;
+    document.getElementById(`${sectionId}-message`).focus();
 }
 
 function prepareMessageHtml(fullName, message, createdAt, isMine) {
@@ -103,7 +103,7 @@ function insertMessage(sectionId){
     date = date.split("T")[0] + " " + date.split("T")[1];
     messageContainer.innerHTML += prepareMessageHtml(myName, newMessage, date, true);
 
-    fetch('http://localhost:5000/create_message', {
+    fetch('https://hobby-hub.azurewebsites.net/api/create_message', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ function insertMessage(sectionId){
         body: JSON.stringify({
             text: newMessage,
             user_id: myUserId,
-            channel_id: 23
+            channel_id: channelId
         })
     });
 }
