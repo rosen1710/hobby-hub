@@ -1,4 +1,4 @@
-function loadMessages(sectionId){
+function loadMessages(sectionId) {
     let section=document.getElementById(sectionId);
     section.innerHTML="";
     let messageHtml =`<div class="container lg-6 pt-2" id="${sectionId}-message-container">`;
@@ -68,7 +68,3 @@ function addMessageForm(sectionId){
         </div>
     </div>`;
 }
-
-
-
-

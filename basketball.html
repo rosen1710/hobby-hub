@@ -4,7 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="js/channel-section.js"></script>
+    <!-- <script src="js/channel-section.js"></script> -->
+    <script src="js/message.js"></script>
     <title>Basketball</title>
     <link rel="icon" href="assets/logo_form.png">
     <link rel="stylesheet" href="styles.css">
@@ -13,14 +14,14 @@
     <!-- navbar -->
   <nav class="navbar navbar-expand-lg navbar-light pt-2 pb-2">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#intro">
+      <a class="navbar-brand" href="index.html">
         <div class="col-lg-4 text-center d-lg-block">
             <img src="/assets/hobbHUB_logo.png" class="px-2" alt="logo" height="50px">
         </div>
       </a>
         <div class="justify-content-start align-center" id="main-nav">
           <button class="btn btn-primary cyanbg text-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft">Hobbies list</button>
-            <a class="btn btn-primary cyanbg" onclick = logoffFunction() href="index.html">Log off</a>
+          <button class="btn btn-primary cyanbg" onclick = "logoutFunction();">Log out</button>
         </div>
 
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
@@ -38,7 +39,7 @@
                       </div>
                       <ul>
                         <li>
-                            <a href="hobby.html">Base Hobby Page</a>
+                            <a href="hobby.html">Football</a>
                         </li>
                         <li>
                             <a href="soccer.html">Soccer</a>
@@ -90,7 +91,7 @@
         var objDiv = document.getElementById("general");
         objDiv.scrollTop = objDiv.scrollHeight;
     </script>
-    <script src="js/message.js"></script>
+    <script src="js/logout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
