@@ -1,10 +1,32 @@
 let loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', login);
-function login(event){
-    //event.preventDefault();
+
+async function login(event) {
+    event.preventDefault();
     let formData = new FormData(event.target);
-    formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`)
+
+    response = await fetch('https://hobby-hub.azurewebsites.net/api/login_user', {
+        method: 'POST',
+        body: JSON.stringify({
+            email: formData.get('email'),
+            password: formData.get('password')
+        })
     });
-    debugger;
+    // console.log(response);
+
+    // console.log(response.status);
+
+    data = await response.json();
+
+    // console.log(data);
+
+    if(response.status == 400) {
+        alert(data.message);
+    }
+    else if(response.status == 200) {
+        localStorage.setItem("id", data.user.id);
+        localStorage.setItem("password", formData.get('password'));
+        // alert(data.message);
+        window.location.replace("hobby.html");
+    }
 }

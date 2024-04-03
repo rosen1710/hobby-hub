@@ -1,4 +1,3 @@
-myUserId = 2;
 myName = "You";
 
 channelId = 1;
@@ -15,9 +14,6 @@ function loadMessages(sectionId) {
 async function fetchMessages(sectionId) {
     response = await fetch('https://hobby-hub.azurewebsites.net/api/fetch_messages', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
             channel_id: channelId
         })
@@ -47,7 +43,7 @@ async function fetchMessages(sectionId) {
         message = row.text,
         createdAt=row.created_at.split(".")[0];
         let isMine = false;
-        if(row.user_id == myUserId) {
+        if(row.user_id == localStorage.getItem("id")) {
             isMine = true;
             fullName = myName;
         }
@@ -105,12 +101,10 @@ function insertMessage(sectionId){
 
     fetch('https://hobby-hub.azurewebsites.net/api/create_message', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
             text: newMessage,
-            user_id: myUserId,
+            user_id: localStorage.getItem("id"),
+            password: localStorage.getItem("password"),
             channel_id: channelId
         })
     });

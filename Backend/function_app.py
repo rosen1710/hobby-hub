@@ -88,8 +88,10 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200
         )
     except sqlalchemy.exc.IntegrityError:
+        logging.exception(f"{str(type(e))}: {str(e)}")
         return func.HttpResponse(
             json.dumps({
+                "exception": str(type(e)),
                 "message": "User with this email already exists!"
             }),
             status_code=400
@@ -131,8 +133,10 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200
         )
     except sqlalchemy.exc.IntegrityError:
+        logging.exception(f"{str(type(e))}: {str(e)}")
         return func.HttpResponse(
             json.dumps({
+                "exception": str(type(e)),
                 "message": "This hobby already exists!"
             }),
             status_code=400
@@ -274,7 +278,7 @@ def login_user(req: func.HttpRequest) -> func.HttpResponse:
                 "message": "User was logged in successfully",
                 "user": user_data
             }),
-            status_code=202
+            status_code=200
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
@@ -307,7 +311,7 @@ def fetch_hobbies(req: func.HttpRequest) -> func.HttpResponse:
                 "message": "Hobbies were fetched successfully",
                 "hobbies": hobbies
             }),
-            status_code=202
+            status_code=200
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
@@ -345,7 +349,7 @@ def fetch_channels(req: func.HttpRequest) -> func.HttpResponse:
                 "message": "Channels were fetched successfully",
                 "channels": channels
             }),
-            status_code=202
+            status_code=200
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
@@ -385,7 +389,7 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
                 "message": "Messages were fetched successfully",
                 "messages": messages
             }),
-            status_code=202
+            status_code=200
         )
     except Exception as e:
         logging.exception(f"{str(type(e))}: {str(e)}")
