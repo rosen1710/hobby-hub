@@ -5,12 +5,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- <script src="js/channel-section.js"></script> -->
-    <script src="js/message.js"></script>
     <title>Hobby</title>
     <link rel="icon" href="assets/logo_form.png">
     <link rel="stylesheet" href="styles.css">
+    <script src="js/message.js"></script>
+    <script src="js/logout.js"></script>
 </head>
-<body>
+<body onload="showForm()">
     <!-- navbar -->
   <nav class="navbar navbar-expand-lg navbar-light pt-2 pb-2">
     <div class="container-fluid">
@@ -21,7 +22,7 @@
       </a>
         <div class="justify-content-start align-center" id="main-nav">
           <button class="btn btn-primary cyanbg text-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft">Hobbies list</button>
-          <button class="btn btn-primary cyanbg" onclick = "logoutFunction();">Log out</button>
+          <button class="btn btn-primary cyanbg" onclick = "logoutFunction()">Log out</button>
         </div>
 
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
@@ -71,27 +72,26 @@
         <div class="container lg-6 align-items-center text-center">
             <nav>
                 <div class="nav nav-tabs bgdefault" id="nav-tab" role="tablist">
-                  <button class="col-lg-2 nav-link active fs-3" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="nav-general" aria-selected="true" onclick="loadMessages('general')">General</button>
-                  <button class="col-lg-2 nav-link fs-3" id="nav-teams-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button" role="tab" aria-controls="nav-teams" aria-selected="false" onclick="loadMessages('teams')">Teams</button>
-                  <button class="col-xl-2 nav-link fs-3" id="nav-achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab" aria-controls="nav-achievements" aria-selected="false" onclick="loadMessages('achievements')">Achievemnts</button>
+                  <button class="col-lg-2 nav-link active fs-3" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="nav-general" aria-selected="true" onclick="loadMessages()">General</button>
+                  <!-- <button class="col-lg-2 nav-link fs-3" id="nav-teams-tab" data-bs-toggle="tab" data-bs-target="#teams" type="button" role="tab" aria-controls="nav-teams" aria-selected="false" onclick="loadMessages()">Teams</button>
+                  <button class="col-xl-2 nav-link fs-3" id="nav-achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab" aria-controls="nav-achievements" aria-selected="false" onclick="loadMessages()">Achievemnts</button> -->
                 </div>
               </nav>
               <div class="tab-content bg-white text-muted text-wrap form-control" id="nav-tabContent">
                 <!-- General tab -->
-                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="nav-general-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div>
-                <!-- Teams tab -->
-                <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="nav-teams-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div>
-                <!-- Achievements tab -->
-                <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="nav-achievements-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div>
+                <div class="tab-pane fade show active" id="content-container" role="tabpanel" aria-labelledby="nav-general-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px">
+                  <div id="messages-container"></div>
+                </div>
+                <div id="message-form"></div>
+                <!-- Another tabs -->
+                <!-- <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="nav-teams-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div>
+                <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="nav-achievements-tab" style="overflow-y:scroll; overflow-x:hidden; height:500px"></div> -->
               </div>
         </div>
     </section>
     <script>
         document.getElementById('nav-general-tab').click();
-        var objDiv = document.getElementById("general");
-        objDiv.scrollTop = objDiv.scrollHeight;
     </script>
-    <script src="js/logout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
