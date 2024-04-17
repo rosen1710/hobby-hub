@@ -26,6 +26,8 @@ async function login(event) {
     else if(response.status == 200) {
         localStorage.setItem("id", data.user.id);
         localStorage.setItem("password", formData.get('password'));
+        sessionStorage.setItem("hobbyId", "1");
+        sessionStorage.setItem("channelId", "1");
         // alert(data.message);
         window.location.replace("hobby.html");
     }

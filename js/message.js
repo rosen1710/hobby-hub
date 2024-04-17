@@ -1,13 +1,11 @@
 var myName = "You";
 
-var channelId = 1;
-
 function showForm() {
     if(localStorage.getItem("id") != null && localStorage.getItem("password") != null) {
         document.getElementById("message-form").innerHTML = `
             <div class="row pb-2" style="padding-top: 10px;">
                 <div class="col-9 col-lg-10">
-                    <textarea name="message-text" type="text" id="message-text" style="height: 94px; min-height: 94px;" class="container-fluid form-control" autofocus></textarea>
+                    <textarea name="message-text" type="text" id="message-text" style="height: 94px; min-height: 94px;" class="container-fluid form-control" /*autofocus*/></textarea>
                 </div>
                 <div class="col-2 col-lg-1">
                     <button type="button" id="send-btn" style="box-sizing: unset; height: 80px;" class="col container-fluid form-control" onclick="insertMessage()">Send</button>
@@ -20,7 +18,10 @@ function showForm() {
     }
 }
 
-function loadMessages() {
+function loadMessages(channelId) {
+    if(channelId != undefined) {
+        sessionStorage.setItem("channelId", channelId)
+    }
 
     fetchMessages();
 
@@ -33,7 +34,7 @@ async function fetchMessages() {
     let response = await fetch('https://hobby-hub.azurewebsites.net/api/fetch_messages', {
         method: 'POST',
         body: JSON.stringify({
-            channel_id: channelId
+            channel_id: sessionStorage.getItem("channelId")
         })
     });
     // console.log(response);
@@ -99,7 +100,7 @@ async function insertMessage() {
             text: newMessage,
             user_id: localStorage.getItem("id"),
             password: localStorage.getItem("password"),
-            channel_id: channelId
+            channel_id: sessionStorage.getItem("channelId")
         })
     });
     if(response.status == 200) {
@@ -125,7 +126,11 @@ async function insertMessage() {
                 text += "<br>";
             }
         }
-        messageContainer.innerHTML += prepareMessageHtml(myName, text, date, true);
+        try {
+            messageContainer.innerHTML += prepareMessageHtml(myName, text, date, true);
+        } catch (error) {
+            document.getElementById("messages-container").innerHTML += prepareMessageHtml(myName, text, date, true);
+        }
         document.getElementById("content-container").scrollTop = document.getElementById("content-container").scrollHeight;
     }
     fetchMessages();
