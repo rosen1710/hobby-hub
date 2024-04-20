@@ -1,6 +1,7 @@
 from sqlalchemy import Text, Integer, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from datetime import datetime
+from typing import List
 import bcrypt
 
 class Base(DeclarativeBase):
@@ -14,6 +15,7 @@ class User(Base):
     fullname: Mapped[str] = mapped_column(Text)
     age: Mapped[int] = mapped_column(Integer)
     description: Mapped[str] = mapped_column(Text)
+    messages: Mapped[List["Message"]] = relationship(back_populates="user")
 
     def __init__(self, email, password, fullname, age, description):
         self.email = email
@@ -64,6 +66,7 @@ class Message(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str] = mapped_column(Text)
     user_id: Mapped[int] = mapped_column(ForeignKey("hhuser.id"))
+    user: Mapped["User"] = relationship(back_populates="messages")
     channel_id: Mapped[int] = mapped_column(ForeignKey("channel.id"))
     created_at: Mapped[DateTime] = mapped_column(DateTime)
 

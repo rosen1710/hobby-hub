@@ -119,16 +119,23 @@ def create_hobby(req: func.HttpRequest) -> func.HttpResponse:
         engine = create_db_engine()
 
         with Session(engine) as session:
+            hobby = Hobby(
+                name=name
+            )
+            session.add(hobby)
+            session.flush()
             session.add(
-                Hobby(
-                    name=name
+                Channel(
+                    name="General",
+                    hobby_id=hobby.id
                 )
             )
             session.commit()
 
         return func.HttpResponse(
             json.dumps({
-                "message": "Hobby was added successfully"
+                "message": "Hobby was added successfully",
+                "info": "Channel 'General' was created automatically for this hobby"
             }),
             status_code=200
         )
@@ -373,13 +380,12 @@ def fetch_messages(req: func.HttpRequest) -> func.HttpResponse:
         messages = []
 
         with Session(engine) as session:
-            for message in session.scalars(select(Message).where(Message.channel_id == channel_id)):
-                user = session.scalar(select(User).where(User.id == message.user_id))
+            for message in session.scalars(select(Message).where(Message.channel_id == channel_id).join(Message.user)):
                 messages.append({
                     "id": message.id,
                     "text": message.text,
                     "user_id": message.user_id,
-                    "user_fullname": user.fullname,
+                    "user_fullname": message.user.fullname,
                     "channel_id": message.channel_id,
                     "created_at": str(message.created_at + timedelta(hours=3))
                 })
