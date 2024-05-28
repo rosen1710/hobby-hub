@@ -51,18 +51,14 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
         age = req_body.get('age')
         description = req_body.get('description')
 
-        emailregex = re.compile(r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
-        passwordregex = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
-        fullnameregex = re.compile(r"[A-Za-z]{2,25}\s[A-Za-z]{2,25}")
+        email_regex = re.compile(r"^[\w\-\.]+@([\w\-]+\.)+[\w]{2,}$")
+        password_regex = re.compile(r"^[^\s]{8,}$")
 
-        if not re.fullmatch(emailregex, email):
+        if not re.fullmatch(email_regex, email):
             raise ValueError("Email is not valid!")
 
-        if not re.fullmatch(passwordregex, password):
-            raise ValueError("Password is not valid!")
-
-        if not re.fullmatch(fullnameregex, fullname):
-            raise ValueError("Full name is not valid!")
+        if not re.fullmatch(password_regex, password):
+            raise ValueError("Your password must be at least 8 characters!")
 
         if (age < 14) or (age > 150):
             raise ValueError("Age is not valid!")
